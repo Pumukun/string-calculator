@@ -202,7 +202,6 @@ private:
                 if (!operator_stack.empty() && operator_stack.top().type == OPENPH) {
                     operator_stack.pop();
                 } else {
-                    // Error: Unmatched parentheses
                     cout << "Error: Unmatched parentheses" << endl;
                     return;
                 }
