@@ -12,16 +12,19 @@ void show_stack(stack<Lexeme> lex_stack) {
 }
 
 int main() {
-    Calculator calc("12 - 13 / (4.2 * 3.323) - 2 * 3 -  3.5 * 54 - 16 * 7 + 2");
-
-    vector<Lexeme> xd = calc.lexemes;
-
-    for (auto& i : xd) {
-        cout << i.value << " ";
-    } cout << "\n\n";
+    Calculator calc;
+    string input;
     
-    show_stack(calc.number_stack);
-    show_stack(calc.operator_stack);
+    cout << "Enter expression:\nPossible operators: {+, -, *, /}\n";
+    
+    while (input != "quit") {
+        cout << ">>> ";
+        cin >> input;
+
+        calc.set_expression(input);
+        cout << calc.get_result() << "\n";
+        input = "";
+    }
 
     return 0;
 }

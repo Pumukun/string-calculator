@@ -22,7 +22,7 @@ struct Lexeme {
 };
 
 class Calculator {
-public:
+private:
 
     string expression;
     
@@ -30,15 +30,31 @@ public:
 
     stack<Lexeme> operator_stack, number_stack;
 
+    float result = 0;
+
+public:
+
     Calculator(): expression("") {}
 
     Calculator(string expression): expression(expression) {
         parse_expression();
-        evaluate();
+        result = evaluate();
     }
 
     ~Calculator() {}
 
+    float calculate() {
+        parse_expression();
+        result = evaluate();
+        return result;
+    }
+
+    float get_result() { return result; }
+    
+    void set_expression(string expr) { 
+        expression = expr; 
+        calculate();
+    }
 private:
     
     bool is_number(char c) { return c >= '0' && c <= '9' || c == '.'; }
@@ -157,7 +173,7 @@ private:
         }
     }
 
-    void evaluate() {
+    float evaluate() {
         for (Lexeme& lex : lexemes) {
             if (lex.type == NUMBER) {
                 number_stack.push(lex);
@@ -203,7 +219,7 @@ private:
                     operator_stack.pop();
                 } else {
                     cout << "Error: Unmatched parentheses" << endl;
-                    return;
+                    return -1;
                 }
             }
         }
@@ -211,7 +227,7 @@ private:
         while (!operator_stack.empty()) {
             if (operator_stack.top().type == OPENPH || operator_stack.top().type == CLOSEPH) {
                 cout << "Error: Unmatched parentheses" << endl;
-                return;
+                return -1;
             }
 
             float num_1 = stof(number_stack.top().value); number_stack.pop();
@@ -224,10 +240,9 @@ private:
         }
 
         if (number_stack.size() == 1) {
-            cout << "Result: " << number_stack.top().value << endl;
+            return stof(number_stack.top().value);
         } else {
             cout << "Error: Invalid expression" << endl;
         }
     }
-    
 };
