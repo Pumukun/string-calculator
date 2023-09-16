@@ -13,17 +13,22 @@ void show_stack(stack<Lexeme> lex_stack) {
 
 int main() {
     Calculator calc;
-    string input;
+    string input = "";
     
     cout << "Enter expression:\nPossible operators: {+, -, *, /}\n";
     
-    while (input != "quit") {
+    while (1) {
         cout << ">>> ";
+        input = "";
         cin >> input;
 
         calc.set_expression(input);
+        calc.calculate();
         cout << calc.get_result() << "\n";
-        input = "";
+
+        if (input == "quit") {
+            break;
+        }
     }
 
     return 0;

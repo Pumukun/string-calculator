@@ -36,26 +36,35 @@ public:
 
     Calculator(): expression("") {}
 
-    Calculator(string expression): expression(expression) {
-        parse_expression();
-        result = evaluate();
-    }
+    Calculator(string expression): expression(expression) {}
 
     ~Calculator() {}
 
-    float calculate() {
+    void calculate() {
+        clear_stack();
         parse_expression();
         result = evaluate();
-        return result;
-    }
+    } 
 
     float get_result() { return result; }
     
     void set_expression(string expr) { 
-        expression = expr; 
-        calculate();
+        expression = std::move(expr); 
     }
+    
 private:
+
+    void clear_stack() {
+        while (!operator_stack.empty()) {
+            operator_stack.pop();
+        }
+
+        while (!number_stack.empty()) {
+            number_stack.pop();
+        }
+
+        lexemes.clear();
+    }
     
     bool is_number(char c) { return c >= '0' && c <= '9' || c == '.'; }
     bool is_operator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
@@ -219,7 +228,7 @@ private:
                     operator_stack.pop();
                 } else {
                     cout << "Error: Unmatched parentheses" << endl;
-                    return -1;
+                    return 0;
                 }
             }
         }
@@ -227,7 +236,7 @@ private:
         while (!operator_stack.empty()) {
             if (operator_stack.top().type == OPENPH || operator_stack.top().type == CLOSEPH) {
                 cout << "Error: Unmatched parentheses" << endl;
-                return -1;
+                return 0;
             }
 
             float num_1 = stof(number_stack.top().value); number_stack.pop();
