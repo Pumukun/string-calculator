@@ -67,7 +67,7 @@ private:
     }
     
     bool is_number(char c) { return c >= '0' && c <= '9' || c == '.'; }
-    bool is_operator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
+    bool is_operator(char c) { return c == '+' || c == '-' || c == '*' || c == '/' || c == '^'; }
     bool is_ph_o(char c) { return c == '('; }
     bool is_ph_c(char c) { return c == ')'; }
 
@@ -102,11 +102,15 @@ private:
             if (is_operator(c)) {
                 tmp_str += c;
                 pos++;
-
+                
                 if (c == '+' || c == '-') {
                     lexeme.priority = 1;
-                } else {
+                }
+                if (c == '*' || c == '/') {
                     lexeme.priority = 2;
+                }
+                if (c == '^') {
+                    lexeme.priority = 3;
                 }
 
                 lexeme.value = tmp_str;
@@ -176,6 +180,11 @@ private:
                 return res;
             case '/':
                 res.value = to_string(num_2 / num_1);
+                res.type = NUMBER;
+                res.priority = 0;
+                return res;
+            case '^':
+                res.value = to_string(pow(num_2, num_1));
                 res.type = NUMBER;
                 res.priority = 0;
                 return res;
